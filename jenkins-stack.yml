@@ -6,6 +6,7 @@ services:
     image: gmlpdou/jenkins:${TAG:-latest}
     ports:
       - 50000:50000
+      - 8080:8080
     networks:
       - default
     volumes:
@@ -22,7 +23,7 @@ services:
       - jenkins-pass
 
   agent:
-    image: gmlpdou/jenkins-swarm-agent:${TAG:-latest}
+    image: gmlpdou/jenkins-slave:${TAG:-latest}
     environment:
       - USER_NAME_SECRET=/run/secrets/${JENKINS_USER_SECRET:-jenkins-user}
       - PASSWORD_SECRET=/run/secrets/${JENKINS_PASS_SECRET:-jenkins-pass}
