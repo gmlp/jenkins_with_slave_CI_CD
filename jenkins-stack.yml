@@ -1,0 +1,58 @@
+version: "3.1"
+
+services:
+
+  master:
+    image: gmlpdou/jenkins:${TAG:-latest}
+    ports:
+      - 50000:50000
+    networks:
+      - default
+    volumes:
+      - jm:/var/jenkins_home
+      - jmshare:/usr/share/jenkins/ref
+    deploy:
+      resources:
+        reservations:
+          memory: 500M
+        limits:
+          memory: 1000M
+    secrets:
+      - jenkins-user
+      - jenkins-pass
+
+  agent:
+    image: gmlpdou/jenkins-swarm-agent:${TAG:-latest}
+    environment:
+      - USER_NAME_SECRET=/run/secrets/${JENKINS_USER_SECRET:-jenkins-user}
+      - PASSWORD_SECRET=/run/secrets/${JENKINS_PASS_SECRET:-jenkins-pass}
+      - COMMAND_OPTIONS=-master http://master:8080/jenkins ${AGENT_LABELS} -executors 4
+    networks:
+      - default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - jenkins-user
+      - source: jenkins-pass
+        mode: 0400
+    deploy:
+      resources:
+        reservations:
+          memory: 500M
+        limits:
+          memory: 1000M
+
+
+networks:
+  default:
+    external: false
+
+secrets:
+  jenkins-user:
+    external: true
+  jenkins-pass:
+    external: true
+
+volumes:
+  jm:
+  jmshare:
