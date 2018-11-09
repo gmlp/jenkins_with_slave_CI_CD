@@ -32,6 +32,7 @@ services:
       - default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - workspace:/workspace
     secrets:
       - jenkins-user
       - source: jenkins-pass
@@ -57,3 +58,4 @@ secrets:
 volumes:
   jm:
   jmshare:
+  workspace:
