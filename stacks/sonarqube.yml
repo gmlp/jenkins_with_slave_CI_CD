@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  sonarqube:
+    image: "sonarqube:7.1-alpine"
+    ports:
+      - "9000:9000"
+    environment:
+      SONARQUBE_JDBC_USERNAME: ${SONAR_DB_USER:-sonar}
+      SONARQUBE_JDBC_PASSWORD: ${SONAR_DB_PASS:-sonar}
+      SONARQUBE_JDBC_URL: "jdbc:postgresql://db:5432/sonar"
+    volumes:
+      - "extensions:/opt/sonarqube/extensions"
+      - "plugins:/opt/sonarqube/lib/bundled-plugins"
+  db:
+    image: "postgres:10.1-alpine"
+    environment:
+      POSTGRES_USER: ${SONAR_DB_USER:-sonar}
+      POSTGRES_PASSWORD: ${SONAR_DB_PASS:-sonar}
+      POSTGRES_DB: sonar
+    volumes:
+      - "db_data:/var/lib/postgresql/data"
+volumes:
+  db_data:
+  extensions:
+  plugins:

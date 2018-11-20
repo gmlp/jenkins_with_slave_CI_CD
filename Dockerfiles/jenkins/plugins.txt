@@ -10,3 +10,6 @@ swarm
 blueocean
 thinBackup
 github-oauth
+emailext
+config-file-provider
+ssh-agent
