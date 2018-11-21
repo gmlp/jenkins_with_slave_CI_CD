@@ -5,6 +5,9 @@ services:
     image: "sonarqube:7.1-alpine"
     ports:
       - "9000:9000"
+    networks:
+      - default
+      - sonarqube
     environment:
       SONARQUBE_JDBC_USERNAME: ${SONAR_DB_USER:-sonar}
       SONARQUBE_JDBC_PASSWORD: ${SONAR_DB_PASS:-sonar}
@@ -14,6 +17,8 @@ services:
       - "plugins:/opt/sonarqube/lib/bundled-plugins"
   db:
     image: "postgres:10.1-alpine"
+    networks:
+      - default
     environment:
       POSTGRES_USER: ${SONAR_DB_USER:-sonar}
       POSTGRES_PASSWORD: ${SONAR_DB_PASS:-sonar}
@@ -24,3 +29,8 @@ volumes:
   db_data:
   extensions:
   plugins:
+networks:
+  default:
+    external: false
+  sonarqube:
+    external: true
