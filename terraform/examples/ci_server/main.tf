@@ -1,13 +1,3 @@
-data "terraform_remote_state" "global" {
-  backend = "s3"
-
-  config {
-    bucket = "tf-remote-state-training-nov"
-    key = "jenkins_with_slave_CI_CD/global/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
 module "vpc-docker" {
   source = "../../modules/vpc-docker"
   tags = "${data.terraform_remote_state.global.tags}"
